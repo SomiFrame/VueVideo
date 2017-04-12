@@ -127,6 +127,7 @@
                 <source type="video/mp4" :scr="player.videoUrl">
             </video>
         </div>
+
     </div>
 </template>
 <script type="text/babel">
@@ -711,6 +712,8 @@
             width: 100%;
             height: 100%;
             background-color: #000;
+            top: 0;
+            left: 0;
             font-size: inherit;
             video {
                 width: 100%;
