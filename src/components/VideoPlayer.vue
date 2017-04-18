@@ -46,7 +46,7 @@
                         </g>
                     </svg>
                 </div>
-                <div class="somi-controller">
+                <div class="somi-controller" :class="{'somi-hide': player.controller.hide}">
                     <div class="somi-slider-bar"
                          v-on:mousedown="sliderDown"
                          v-on:mouseenter="sliderEnter">
@@ -127,7 +127,6 @@
                 <source type="video/mp4" :scr="player.videoUrl">
             </video>
         </div>
-
     </div>
 </template>
 <script type="text/babel">
@@ -150,6 +149,8 @@
                         loading: ""
                     },
                     controller : {
+                        hide: true,
+                        timeOutId:0,
                         sliderBar: {
                             playedPosition: 0,
                             playedPercentage: 0,
@@ -384,6 +385,12 @@
                         .to(_this.player.controller.mainButton.paused.points,150)
                         .start();
                 requestAnimationFrame(this.svgAnimate);
+                clearTimeout(_this.player.controller.timeOutId);
+                _this.player.controller.timeOutId = setTimeout(function() {
+                    if(!video.paused) {
+                        _this.player.controller.hide = true;
+                    }
+                },2000);
             },
             v_pause(e) {
                 let video = e.srcElement || e.target;
@@ -393,7 +400,7 @@
                         .to(_this.player.controller.mainButton.play.points,150)
                         .start();
                 requestAnimationFrame(this.svgAnimate);
-
+                _this.player.controller.hide = false;
             },
             v_timeupdate(e) {
                 let video = e.srcElement || e.target;
@@ -415,7 +422,6 @@
             },
             v_error(e) {
                 let video = e.srcElement || e.target;
-                alert(video.readyState);
             },
             v_volumechange(e) {
                 let video = e.srcElement || e.target;
@@ -503,6 +509,7 @@
                 let video = document.querySelector(".somi-main-video");
                 let sliderBar = document.querySelector(".somi-slider-bar");
                 let sliderPosition = e.clientX - this.player.controller.sliderBar.position.x;
+                _this.player.controller.hide = false;
                 this.player.controller.sliderBar.hoverPosition = sliderPosition;
                 if (this.player.controller.sliderBar.focus) {
                     this.player.controller.sliderBar.playedPosition = sliderPosition;
@@ -523,6 +530,12 @@
                                 sliderPosition / sliderBar.offsetWidth * video.duration;
                     }, 100)();
                 }
+                clearTimeout(_this.player.controller.timeOutId);
+                _this.player.controller.timeOutId = setTimeout(function() {
+                    if(!video.paused) {
+                        _this.player.controller.hide = true;
+                    }
+                },2000);
             },
             sliderDown(e) {
                 let video  = document.querySelector(".somi-main-video");
@@ -576,7 +589,6 @@
                         } else {
                             video.currentTime = 0;
                         }
-
                         this.player.svgState.show = "back show";
                         break;
                     case 38: //up
@@ -614,7 +626,6 @@
                         }
                 }
                 this.playerKeyDown = false;
-
             },
             fullScreenChange(e) {
                 if(document.fullscreenElement ||
@@ -820,6 +831,12 @@
                     background-repeat: repeat-x;
                     font-size: inherit;
                     z-index: 2;
+                    opacity: 1;
+                    transition: all .8s;
+                    &.somi-hide {
+                        bottom: -100%;
+                        opacity: 0;
+                     }
                     &:after {
                         clear: both;
                         content: " "
@@ -908,19 +925,19 @@
                         float: right;
                         cursor: pointer;
                         .svg-fullScreen {
-                        g {
-                            transition: .3s;
-                            transform-origin: center;
-                            path {
-                                fill: $main-color;
-                                transition: .3s;
-                            }
-                        }
-                        &.fullScreen {
                             g {
-                                transform: rotateZ(180deg);
+                                transition: .3s;
+                                transform-origin: center;
+                                path {
+                                    fill: $main-color;
+                                    transition: .3s;
+                                }
                             }
-                         }
+                            &.fullScreen {
+                                g {
+                                    transform: rotateZ(180deg);
+                                }
+                            }
                         }
                     }
                     .somi-slider-bar {
@@ -976,7 +993,6 @@
                                 width: 100%;
                             }
                         }
-
                     }
                     .somi-slider-bar:hover {
                         height: .7em;
