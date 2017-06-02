@@ -11,6 +11,8 @@ npm install
 # serve with hot reload at localhost:8080
 npm run dev
 
+# the vuevideo page is at localhost:8080/vue-video
+
 # build for production with minification
 npm run build
 
