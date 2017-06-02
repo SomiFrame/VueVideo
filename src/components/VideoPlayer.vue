@@ -1,144 +1,151 @@
 <template>
-    <div class="somi-player-container">
-        <div class="somi-player-box" v-on:fullscreenchange="fullScreenChange"
-             v-on:webkitfullscreenchange="fullScreenChange"
-             v-on:mozfullscreenchange="fullScreenChange"
-             v-on:MSFullscreenChange="fullScreenChange">
-            <div class="somi-player-display" tabindex="1"
-                 v-on:mousemove="sliderMove"
-                 v-on:mouseleave="sliderLeave"
-                 v-on:mouseup="sliderUp"
-                 v-on:keydown="videoKeyDown">
-                <div class="somi-event-div"
-                     v-on:dblclick="fullScreen"
-                     v-on:click="playVideo">
-                    <svg :class="player.svgState.show"
-                         class="" width="100%" height="100%" viewBox="-18 -19 70 70"
-                        v-on:transitionend="transitionEnd"
-                        v-on:transition="transitionEnd"
-                        v-on:OTransition="transitionEnd"
-                        v-on:MozTransition="transitionEnd">
-                        <g class="time-back" transform="scale(0.03125 0.03125)">
-                            <path d="M512 64c-141.384 0-269.376 57.32-362.032 149.978l-149.968-149.978v384h384l-143.532-143.522c69.496-69.492 165.492-112.478 271.532-112.478 212.068 0 384 171.924 384 384 0 114.696-50.292 217.636-130.018 288l84.666 96c106.302-93.816 173.352-231.076 173.352-384 0-282.77-229.23-512-512-512z"></path>
-                        </g>
-                        <g class="time-ahead" transform="scale(0.03125 0.03125)">
-                            <path d="M0 576c0 152.924 67.048 290.184 173.35 384l84.666-96c-79.726-70.364-130.016-173.304-130.016-288 0-212.076 171.93-384 384-384 106.042 0 202.038 42.986 271.53 112.478l-143.53 143.522h384v-384l-149.97 149.978c-92.654-92.658-220.644-149.978-362.030-149.978-282.77 0-512 229.23-512 512z"></path>
-                        </g>
-                        <g class="video-pause" transform="scale(0.03125 0.03125)">
-                            <path d="M192 128l640 384-640 384z"></path>
-                        </g>
-                        <g class="video-play" transform="scale(0.03125 0.03125)">
-                            <path d="M128 128h320v768h-320zM576 128h320v768h-320z"></path>
-                        </g>
-                        <g class="volume-up" transform="scale(0.03125 0.03125)">
-                            <path d="M1024 576h-192v192h-128v-192h-192v-128h192v-192h128v192h192v128z"></path>
-                            <path d="M416.006 960c-8.328 0-16.512-3.25-22.634-9.374l-246.626-246.626h-114.746c-17.672 0-32-14.326-32-32v-320c0-17.672 14.328-32 32-32h114.746l246.626-246.628c9.154-9.154 22.916-11.89 34.874-6.936 11.958 4.952 19.754 16.622 19.754 29.564v832c0 12.944-7.796 24.612-19.754 29.564-3.958 1.64-8.118 2.436-12.24 2.436z"></path>
-                        </g>
-                        <g class="volume-down" transform="scale(0.03125 0.03125)">
-                            <path d="M512 448h512v128h-512v-128z"></path>
-                            <path d="M416.006 960c-8.328 0-16.512-3.25-22.634-9.374l-246.626-246.626h-114.746c-17.672 0-32-14.326-32-32v-320c0-17.672 14.328-32 32-32h114.746l246.626-246.628c9.154-9.154 22.916-11.89 34.874-6.936 11.958 4.952 19.754 16.622 19.754 29.564v832c0 12.944-7.796 24.612-19.754 29.564-3.958 1.64-8.118 2.436-12.24 2.436z"></path>
-                        </g>
-                    </svg>
-                    <svg :class="player.svgState.loading" width="100%" height="100%" viewBox="-18 -19 70 70">
-                        <g transform="scale(0.03125 0.03125)">
-                            <path d="M384 128c0-70.692 57.308-128 128-128s128 57.308 128 128c0 70.692-57.308 128-128 128s-128-57.308-128-128zM790.994 512c0 0 0 0 0 0 0-57.993 47.013-105.006 105.006-105.006s105.006 47.013 105.006 105.006c0 0 0 0 0 0 0 57.993-47.013 105.006-105.006 105.006s-105.006-47.013-105.006-105.006zM688.424 783.53c0-52.526 42.58-95.106 95.106-95.106s95.106 42.58 95.106 95.106c0 52.526-42.58 95.106-95.106 95.106s-95.106-42.58-95.106-95.106zM425.862 896c0-47.573 38.565-86.138 86.138-86.138s86.138 38.565 86.138 86.138c0 47.573-38.565 86.138-86.138 86.138s-86.138-38.565-86.138-86.138zM162.454 783.53c0-43.088 34.93-78.018 78.018-78.018s78.018 34.93 78.018 78.018c0 43.088-34.93 78.018-78.018 78.018s-78.018-34.93-78.018-78.018zM57.338 512c0-39.026 31.636-70.662 70.662-70.662s70.662 31.636 70.662 70.662c0 39.026-31.636 70.662-70.662 70.662s-70.662-31.636-70.662-70.662zM176.472 240.472c0 0 0 0 0 0 0-35.346 28.654-64 64-64s64 28.654 64 64c0 0 0 0 0 0 0 35.346-28.654 64-64 64s-64-28.654-64-64zM899.464 240.472c0 64.024-51.906 115.934-115.936 115.934-64.024 0-115.936-51.91-115.936-115.934 0-64.032 51.912-115.934 115.936-115.934 64.030 0 115.936 51.902 115.936 115.934z">
-                            </path>
-                        </g>
-                    </svg>
-                </div>
-                <div class="somi-controller" :class="{'somi-hide': player.controller.hide}">
-                    <div class="somi-slider-bar"
-                         v-on:mousedown="sliderDown"
-                         v-on:mouseenter="sliderEnter">
-                        <div class="somi-slider-played" :style="playedStyle"></div>
-                        <div v-for="bufferedStyle in player.controller.sliderBar.bufferedStyles"
-                             class="somi-slider-buffered" :style="bufferedStyle"></div>
-                        <div class="somi-slider-preview-box" :style="getSliderHoverLeft">
-                            <video class="somi-preview-video" :src="player.videoUrl" preload="auto"
-                                   webkit-playsinline playsinline muted>
-                            </video>
-                        </div>
+        <div class="somi-player-container">
+            <div class="somi-player-box" v-on:fullscreenchange="fullScreenChange"
+                 v-on:webkitfullscreenchange="fullScreenChange"
+                 v-on:mozfullscreenchange="fullScreenChange"
+                 v-on:MSFullscreenChange="fullScreenChange">
+                <div class="somi-player-display" tabindex="1"
+                     v-on:mousedown="displayMouseDown"
+                     v-on:mousemove="sliderMove"
+                     v-on:mouseleave="sliderLeave"
+                     v-on:mouseup="sliderUp"
+                     v-on:keydown="videoKeyDown"
+                     v-on:contextmenu="displayContextmenu">
+                    <div class="somi-menu" :style="player.menu.styleObject">
+                    <span>
+                        <a target="_blank" href="https://vuejs.org/">Vue</a>
+                    </span>
+                    <span>
+                        <a target="_blank" href="https://github.com/SomiFrame/VueVideo">GitHub_Somi</a>
+                    </span>
+                    </div>
+                    <div class="somi-event-div"
+                         v-on:dblclick="fullScreen"
+                         v-on:click="playVideo">
+                        <svg :class="player.svgState.show"
+                             class="" width="100%" height="100%" viewBox="-18 -19 70 70"
+                             v-on:transitionend="transitionEnd"
+                             v-on:transition="transitionEnd"
+                             v-on:OTransition="transitionEnd"
+                             v-on:MozTransition="transitionEnd">
+                            <g class="time-back" transform="scale(0.03125 0.03125)">
+                                <path d="M512 64c-141.384 0-269.376 57.32-362.032 149.978l-149.968-149.978v384h384l-143.532-143.522c69.496-69.492 165.492-112.478 271.532-112.478 212.068 0 384 171.924 384 384 0 114.696-50.292 217.636-130.018 288l84.666 96c106.302-93.816 173.352-231.076 173.352-384 0-282.77-229.23-512-512-512z"></path>
+                            </g>
+                            <g class="time-ahead" transform="scale(0.03125 0.03125)">
+                                <path d="M0 576c0 152.924 67.048 290.184 173.35 384l84.666-96c-79.726-70.364-130.016-173.304-130.016-288 0-212.076 171.93-384 384-384 106.042 0 202.038 42.986 271.53 112.478l-143.53 143.522h384v-384l-149.97 149.978c-92.654-92.658-220.644-149.978-362.030-149.978-282.77 0-512 229.23-512 512z"></path>
+                            </g>
+                            <g class="video-pause" transform="scale(0.03125 0.03125)">
+                                <path d="M192 128l640 384-640 384z"></path>
+                            </g>
+                            <g class="video-play" transform="scale(0.03125 0.03125)">
+                                <path d="M128 128h320v768h-320zM576 128h320v768h-320z"></path>
+                            </g>
+                            <g class="volume-up" transform="scale(0.03125 0.03125)">
+                                <path d="M1024 576h-192v192h-128v-192h-192v-128h192v-192h128v192h192v128z"></path>
+                                <path d="M416.006 960c-8.328 0-16.512-3.25-22.634-9.374l-246.626-246.626h-114.746c-17.672 0-32-14.326-32-32v-320c0-17.672 14.328-32 32-32h114.746l246.626-246.628c9.154-9.154 22.916-11.89 34.874-6.936 11.958 4.952 19.754 16.622 19.754 29.564v832c0 12.944-7.796 24.612-19.754 29.564-3.958 1.64-8.118 2.436-12.24 2.436z"></path>
+                            </g>
+                            <g class="volume-down" transform="scale(0.03125 0.03125)">
+                                <path d="M512 448h512v128h-512v-128z"></path>
+                                <path d="M416.006 960c-8.328 0-16.512-3.25-22.634-9.374l-246.626-246.626h-114.746c-17.672 0-32-14.326-32-32v-320c0-17.672 14.328-32 32-32h114.746l246.626-246.628c9.154-9.154 22.916-11.89 34.874-6.936 11.958 4.952 19.754 16.622 19.754 29.564v832c0 12.944-7.796 24.612-19.754 29.564-3.958 1.64-8.118 2.436-12.24 2.436z"></path>
+                            </g>
+                        </svg>
+                        <svg :class="player.svgState.loading" width="100%" height="100%" viewBox="-18 -19 70 70">
+                            <g transform="scale(0.03125 0.03125)">
+                                <path d="M384 128c0-70.692 57.308-128 128-128s128 57.308 128 128c0 70.692-57.308 128-128 128s-128-57.308-128-128zM790.994 512c0 0 0 0 0 0 0-57.993 47.013-105.006 105.006-105.006s105.006 47.013 105.006 105.006c0 0 0 0 0 0 0 57.993-47.013 105.006-105.006 105.006s-105.006-47.013-105.006-105.006zM688.424 783.53c0-52.526 42.58-95.106 95.106-95.106s95.106 42.58 95.106 95.106c0 52.526-42.58 95.106-95.106 95.106s-95.106-42.58-95.106-95.106zM425.862 896c0-47.573 38.565-86.138 86.138-86.138s86.138 38.565 86.138 86.138c0 47.573-38.565 86.138-86.138 86.138s-86.138-38.565-86.138-86.138zM162.454 783.53c0-43.088 34.93-78.018 78.018-78.018s78.018 34.93 78.018 78.018c0 43.088-34.93 78.018-78.018 78.018s-78.018-34.93-78.018-78.018zM57.338 512c0-39.026 31.636-70.662 70.662-70.662s70.662 31.636 70.662 70.662c0 39.026-31.636 70.662-70.662 70.662s-70.662-31.636-70.662-70.662zM176.472 240.472c0 0 0 0 0 0 0-35.346 28.654-64 64-64s64 28.654 64 64c0 0 0 0 0 0 0 35.346-28.654 64-64 64s-64-28.654-64-64zM899.464 240.472c0 64.024-51.906 115.934-115.936 115.934-64.024 0-115.936-51.91-115.936-115.934 0-64.032 51.912-115.934 115.936-115.934 64.030 0 115.936 51.902 115.936 115.934z">
+                                </path>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="somi-controller-background"></div>
+                    <div class="somi-controller" :class="{'somi-hide': player.controller.hide}">
+                        <div class="somi-slider-bar"
+                             v-on:mousedown="sliderDown"
+                             v-on:mouseenter="sliderEnter">
+                            <div class="somi-slider-played" :style="playedStyle"></div>
+                            <div v-for="bufferedStyle in player.controller.sliderBar.bufferedStyles"
+                                 class="somi-slider-buffered" :style="bufferedStyle"></div>
+                            <div class="somi-slider-preview-box" :style="getSliderHoverLeft">
+                                <!--<video class="somi-preview-video" :src="player.videoUrl" preload="auto"-->
+                                <!--webkit-playsinline playsinline muted>-->
+                                <!--</video>-->
+                            </div>
                         <span class="somi-slider-currentTime" :style="getSliderHoverLeft">
                             {{ getSliderCurrentTime }}
                         </span>
-                    </div>
-                    <button class="somi-main-button" v-on:click="playVideo">
-                        <svg class="main-button-svg" height="100%" version="1.1" viewBox="0 0 36 36" width="100%" :class="{ 'button-play': player.paused,'button-paused': !player.paused }">
-                            <path class="play-svg-fill" :d="getMainButtonSvgD" id="ytp-svg-477">
-                            </path>
-                        </svg>
-                    </button>
-                    <div class="somi-volume-container">
-                        <button class="somi-volume" v-on:click="v_setMuted">
-                            <svg class="icon-volume" viewBox="-20 -24 100 110"  fill="currentColor" width="100%" height="100%">
-                                <path fill="#fff" :d="getVolumeSvgD">
-                                </path>
+                        </div>
+                        <button class="somi-main-button" v-on:click="playVideo">
+                            <svg class="main-button-svg" height="100%" version="1.1" viewBox="0 0 36 36" width="100%" :class="{ 'button-play': player.paused,'button-paused': !player.paused }">
+                                <path class="play-svg-fill" :d="getMainButtonSvgD" id="ytp-svg-477"></path>
                             </svg>
                         </button>
-                        <div class="somi-volume-slider-container" v-on:mousedown.capture="volumeSliderDown">
-                            <div class="somi-total-volume">
-                                <div claSS="somi-current-volume" :style="player.controller.volume.slider.class"></div>
+                        <div class="somi-volume-container">
+                            <button class="somi-volume" v-on:click="v_setMuted">
+                                <svg class="icon-volume" viewBox="-20 -24 100 110"  fill="currentColor" width="100%" height="100%">
+                                    <path fill="#fff" :d="getVolumeSvgD"></path>
+                                </svg>
+                            </button>
+                            <div class="somi-volume-slider-container" v-on:mousedown.capture="volumeSliderDown">
+                                <div class="somi-total-volume">
+                                    <div claSS="somi-current-volume" :style="player.controller.volume.slider.class"></div>
+                                </div>
                             </div>
                         </div>
+                        <div class="videoTime">
+                            <span class="videoCurrentTime">{{ stringCurrentTime }}</span>
+                            <span class="">/</span>
+                            <span class="videoTotalTime">{{ stringDuration }}</span>
+                        </div>
+                        <button class="somi-fullScreen-button" v-on:click="fullScreen">
+                            <svg class="svg-fullScreen" :class="{ fullScreen: player.fullScreen }" height="100%" version="1.1" viewBox="0 0 36 36" width="100%">
+                                <g class="ytp-fullscreen-button-corner-0">
+                                    <path class="ytp-svg-fill" d="m 10,16 2,0 0,-4 4,0 0,-2 L 10,10 l 0,6 0,0 z"
+                                          id="ytp-svg-19"></path>
+                                </g>
+                                <g class="ytp-fullscreen-button-corner-1">
+                                    <path class="ytp-svg-fill" d="m 20,10 0,2 4,0 0,4 2,0 L 26,10 l -6,0 0,0 z"
+                                          id="ytp-svg-20"></path>
+                                </g>
+                                <g class="ytp-fullscreen-button-corner-2">
+                                    <path class="ytp-svg-fill" d="m 24,24 -4,0 0,2 L 26,26 l 0,-6 -2,0 0,4 0,0 z"
+                                          id="ytp-svg-21"></path>
+                                </g>
+                                <g class="ytp-fullscreen-button-corner-3">
+                                    <path class="ytp-svg-fill" d="M 12,20 10,20 10,26 l 6,0 0,-2 -4,0 0,-4 0,0 z"
+                                          id="ytp-svg-22"></path>
+                                </g>
+                            </svg>
+                        </button>
                     </div>
-                    <div class="videoTime">
-                        <span class="videoCurrentTime">{{ stringCurrentTime }}</span>
-                        <span class="">/</span>
-                        <span class="videoTotalTime">{{ stringDuration }}</span>
-                    </div>
-                    <button class="somi-fullScreen-button" v-on:click="fullScreen">
-                        <svg class="svg-fullScreen" :class="{ fullScreen: player.fullScreen }" height="100%" version="1.1" viewBox="0 0 36 36" width="100%">
-                            <g class="ytp-fullscreen-button-corner-0">
-                                <path class="ytp-svg-fill" d="m 10,16 2,0 0,-4 4,0 0,-2 L 10,10 l 0,6 0,0 z"
-                                      id="ytp-svg-19">
-                                </path>
-                            </g>
-                            <g class="ytp-fullscreen-button-corner-1">
-                                <path class="ytp-svg-fill" d="m 20,10 0,2 4,0 0,4 2,0 L 26,10 l -6,0 0,0 z"
-                                      id="ytp-svg-20">
-
-                                </path>
-                            </g>
-                            <g class="ytp-fullscreen-button-corner-2">
-                                <path class="ytp-svg-fill" d="m 24,24 -4,0 0,2 L 26,26 l 0,-6 -2,0 0,4 0,0 z"
-                                      id="ytp-svg-21">
-                                </path>
-                            </g>
-                            <g class="ytp-fullscreen-button-corner-3">
-                                <path class="ytp-svg-fill" d="M 12,20 10,20 10,26 l 6,0 0,-2 -4,0 0,-4 0,0 z"
-                                      id="ytp-svg-22">
-                                </path>
-                            </g>
-                        </svg>
-                    </button>
                 </div>
+                <video id="mainVideo" class="somi-main-video" :src="player.videoUrl"
+                       v-on:loadstart="v_loadstart"
+                       v-on:loadedmetadata="v_loadedmetadata"
+                       v-on:waiting="v_waiting"
+                       v-on:canplay="v_canplay"
+                       v-on:play="v_play"
+                       v-on:pause="v_pause"
+                       v-on:timeupdate="v_timeupdate"
+                       v-on:progress="v_progress"
+                       v-on:volumechange="v_volumechange"
+                       v-on:error="v_error">
+                    <!--<source type="video/mp4" :src="player.videoUrl">-->
+                </video>
             </div>
-            <video class="somi-main-video" :src="player.videoUrl"
-                    v-on:loadstart="v_loadstart"
-                    v-on:loadedmetadata="v_loadedmetadata"
-                    v-on:waiting="v_waiting"
-                    v-on:canplay="v_canplay"
-                    v-on:play="v_play"
-                    v-on:pause="v_pause"
-                    v-on:timeupdate="v_timeupdate"
-                    v-on:progress="v_progress"
-                    v-on:volumechange="v_volumechange"
-                    v-on:error="v_error">
-                <source type="video/mp4" :scr="player.videoUrl">
-            </video>
         </div>
-    </div>
 </template>
 <script type="text/babel">
-    import { shape,render,play } from 'wilderness'
     import TWEEN from 'tween.js'
+    import $ from 'jquery'
+    import dash from "somi-dashjs"
     export default {
         name: 'somiVideoPlayer',
         data() {
             return {
+                streamText: "",
                 player: {
                     dom: null,
-                    videoUrl: "http://vjs.zencdn.net/v/oceans.mp4",
+//                    videoUrl: "http://vjs.zencdn.net/v/oceans.mp4",
+                    videoUrl: "",
                     currentTime: "",
                     videoTotalTime: "",
                     paused: true,
@@ -147,6 +154,10 @@
                     svgState: {
                         show: "",
                         loading: ""
+                    },
+                    menu: {
+                      styleObject: {
+                      }
                     },
                     controller : {
                         hide: true,
@@ -356,12 +367,6 @@
                 return this.toHHMMSS(percentage*this.player.controller.videoTime.duration);
             }
         },
-        mounted() {
-            this.player.controller.sliderBar.position =
-                    this.getElementPosition(document.querySelector(".somi-controller"));
-            this.player.controller.volume.slider.position =
-                    this.getElementPosition(document.querySelector(".somi-total-volume"));
-        },
         methods: {
             v_loadstart(e) {
                 this.player.svgState.loading = "loading show";
@@ -468,7 +473,7 @@
                     this.player.svgState.show = "pause show";
                 }
             },
-            fullScreen(e) {
+            fullScreen() {
                 let el = document.querySelector(".somi-player-box");
                 let fullscreenEnabled = document.fullscreenEnabled ||
                         document.webkitFullscreenEnabled ||
@@ -479,11 +484,36 @@
                 let efs = document.exitFullscreen || document.webkitExitFullscreen ||
                         document.mozCancelFullScreen || document.msExitFullscreen;
                 if (fullscreenEnabled) {
-                    if(this.player.fullScreen) {
+                    if(document.fullscreenElement ||
+                            document.webkitFullscreenElement ||
+                            document.mozFullScreenElement ||
+                            document.msFullscreenElement) {
                         efs.call(document);
                     }
                     else {
                         rfs.call(el);
+                    }
+                }
+            },
+            displayContextmenu(e) {
+                e.preventDefault();
+            },
+            displayMouseDown(e) {
+                let el = e.target || e.srcElement;
+                if(el.nodeName == "A") {
+                    el.click();
+                }
+                if(e.button==2) {
+                    this.player.menu.styleObject = {
+                        top: e.offsetY+"px",
+                        left: e.offsetX+"px",
+                        visibility: "visible"
+                    }
+                }else {
+                    this.player.menu.styleObject = {
+                        top: e.offsetY+"px",
+                        left: e.offsetX+"px",
+                        visibility: "hidden"
                     }
                 }
             },
@@ -672,7 +702,7 @@
                     x :target.offsetLeft,
                     y : target.offsetTop
                 };
-                var target = target.offsetParent;
+                target = target.offsetParent;
                 while(target) {
                     position.x += target.offsetLeft;
                     position.y += target.offsetTop;
@@ -694,6 +724,19 @@
                 requestAnimationFrame(this.svgAnimate);
                 TWEEN.update();
             }
+        },
+        mounted() {
+            this.player.controller.sliderBar.position =
+                    this.getElementPosition(document.querySelector(".somi-controller"));
+            this.player.controller.volume.slider.position =
+                    this.getElementPosition(document.querySelector(".somi-total-volume"));
+            console.log(dash.isSupportDash(),`your browser ${ dash.isSupportDash()?'is': 'is not' } support MSE`);
+            let segmentUrl = '/static/VivaLaVida_dashinit.mp4';
+            let videoMimeTypeCodecs = 'video/mp4;codecs="avc1.4D401F,mp4a.40.2"';
+            let initRange = {start: 0, end: 1436};
+            let sidxRange = {start: 1437, end: 1900};
+            let player = new dash('#mainVideo',segmentUrl,videoMimeTypeCodecs,initRange,sidxRange);
+            console.log(`somi-dashjs`,player);
         }
     }
 </script>
@@ -704,11 +747,15 @@
     .somi-player-container {
         position: relative;
         width: 100%;
+        font-size: 15px;
         height: 0;
         padding-bottom: 60%;
-        font-size: 20px;
         button {
             font-size: inherit;
+        }
+        a {
+            color: #fff;
+            text-decoration: none;
         }
         button:focus {
             outline: 0;
@@ -729,6 +776,9 @@
             video {
                 width: 100%;
                 height: 100%;
+                position: absolute;
+                top: 0;
+                left: 0;
             }
             .somi-player-display {
                 position: absolute;
@@ -741,6 +791,24 @@
                 overflow: hidden;
                 &:focus {
                     outline: none;
+                 }
+                 .somi-menu {
+                     position: absolute;
+                     height: auto;
+                     width: auto;
+                     background-color: #000;
+                    opacity: .8;
+                    z-index: 10;
+                    visibility: hidden;
+                     span {
+                         display: block;
+                         color: #fff;
+                         padding: 0 1em;
+                         text-align: left;
+                         &:hover {
+                              background-color: $main-color;
+                          }
+                     }
                  }
                  .somi-event-div {
                      position: absolute;
@@ -771,11 +839,11 @@
                              transform: translate(-50%, -50%);
                              transition: .3s;
                          }
-                         &.back {
+                        &.back {
                             g.time-back{
                                 visibility: visible;
                             }
-                          }
+                        }
                         &.ahead {
                             g.time-ahead{
                                 visibility: visible;
@@ -821,20 +889,34 @@
                          }
                      }
                  }
+                .somi-controller-background {
+                    position: absolute;
+                    left: 0;
+                    bottom: 0;
+                    z-index: -1;
+                    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAADGCAYAAAAT+OqFAAAAdklEQVQoz42QQQ7AIAgEF/T/D+kbq/RWAlnQyyazA4aoAB4FsBSA/bFjuF1EOL7VbrIrBuusmrt4ZZORfb6ehbWdnRHEIiITaEUKa5EJqUakRSaEYBJSCY2dEstQY7AuxahwXFrvZmWl2rh4JZ07z9dLtesfNj5q0FU3A5ObbwAAAABJRU5ErkJggg==);
+                    background-repeat: repeat-x;
+                    width: 100%;
+                    height: 6em;
+                    transition: opacity .25s cubic-bezier(0.0,0.0,0.2,1);
+                    background-position: bottom;
+                }
                 .somi-controller {
                     position: absolute;
                     bottom: 0;
                     height: 4em;
                     left: 1em;
                     right: 1em;
-                    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAADGCAYAAAAT+OqFAAAAdklEQVQoz42QQQ7AIAgEF/T/D+kbq/RWAlnQyyazA4aoAB4FsBSA/bFjuF1EOL7VbrIrBuusmrt4ZZORfb6ehbWdnRHEIiITaEUKa5EJqUakRSaEYBJSCY2dEstQY7AuxahwXFrvZmWl2rh4JZ07z9dLtesfNj5q0FU3A5ObbwAAAABJRU5ErkJggg==);
-                    background-repeat: repeat-x;
                     font-size: inherit;
                     z-index: 2;
                     opacity: 1;
-                    transition: all .8s;
+                    transition: all .1s;
+                    &:hover {
+                         bottom: 0!important;
+                         opacity: 1!important;
+                     }
                     &.somi-hide {
-                        bottom: -100%;
+                        bottom: -6em;
                         opacity: 0;
                      }
                     &:after {
@@ -946,8 +1028,7 @@
                         background-color: $slider-bar-color;
                         position: absolute;
                         top: -.4em;
-                        border-radius: 1em;
-                        transition: .1s;
+                        transition: all .2s;
                         cursor: pointer;
                         .somi-slider-played {
                             background-color: $main-color;
@@ -956,6 +1037,7 @@
                             left: 0;
                             top: 0;
                             z-index: 2;
+                            transition: all .2s;
                         }
                         .somi-slider-buffered {
                             position: absolute;

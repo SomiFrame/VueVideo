@@ -8,13 +8,13 @@ Vue.use(Router)
 export default new Router({
   mode: 'history',
   routes: [
+    // {
+    //   path: '/',
+    //   name: 'Hello',
+    //   component: Hello
+    // },
     {
-      path: '/',
-      name: 'Hello',
-      component: Hello
-    },
-    {
-      path: '/video',
+      path: '/vue-video',
       name: 'Video',
       component: VideoPlayer
     }
