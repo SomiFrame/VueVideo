@@ -733,8 +733,8 @@
             console.log(dash.isSupportDash(),`your browser ${ dash.isSupportDash()?'is': 'is not' } support MSE`);
             let segmentUrl = '/static/VivaLaVida_dashinit.mp4';
             let videoMimeTypeCodecs = 'video/mp4;codecs="avc1.4D401F,mp4a.40.2"';
-            let initRange = {start: 0, end: 1436};
-            let sidxRange = {start: 1437, end: 1900};
+            let initRange = {start: 0, end: 1420};
+            let sidxRange = {start: 1421, end: 2064};
             let player = new dash('#mainVideo',segmentUrl,videoMimeTypeCodecs,initRange,sidxRange);
             console.log(`somi-dashjs`,player);
         }
